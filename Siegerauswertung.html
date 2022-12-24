@@ -1,0 +1,199 @@
+<!DOCTYPE html> 
+  
+<html> 
+    <head> 
+        <title> 
+              Siegerauswertung
+        </title> 
+		<script type="text/javascript">
+			var input = new Array("", "1985-hieu_12#.csv;83;False", "1986_muna_04#.csv;60;False", "1986_wams_07#.csv;49;False", "1987-nano_04#.csv;72;False", "1987-sase_15#.csv;72;True", "1987-wipe_00#.csv;39;False", "1988_cipa_01#.csv;98;False", "1988_pegn_14#.csv;7;False", "1989-daw_11#.csv;43;False", "1989-hoat_12#.csv;27;True", "1989-scou_14#.csv;36;False", "1989-who_06#.csv;71;False", "1990_cica_08#.csv;22;False", "1991-hubi_06#.csv;60;False", "1991-ruad_11#.csv;28;False", "1992_scoxy_03#.csv;53;True", "1993-scayo_11#.csv;9;False", "1994_belo_06#.csv;50;False", "1995-bowd_14#.csv;43;False", "1995-rin_03#.csv;77;False", "1995-scoel_03#.csv;35;True", "1996_bias_14#.csv;33;True", "1996_dieu_02#.csv;13;False", "1996_nego_07#.csv;30;True", "1998_hoo_07#.csv;82;False", "1998_tura_00#.csv;93;True", "1999-diev_13#.csv;80;True", "1999-legs_03#.csv;54;False", "1999-nuou_10#.csv;40;False", "2000_gieu_05#.csv;22;False", "2000_kada_06#.csv;26;True", "2001-gial_12#.csv;5;False", "2001-mel_04#.csv;79;False", "2001-mewe_04#.csv;42;False", "2002_peou_05#.csv;61;False", "2002_sceea_11#.csv;7;False", "2003-scaut_09#.csv;44;False", "2003-scub_10#.csv;57;True", "2003-scueu_06#.csv;15;True", "2004_cune_09#.csv;86;False", "2005-bitu_07#.csv;11;True", "2005-nudi_06#.csv;76;False", "2005-teel_10#.csv;62;False", "2006_hina_07#.csv;87;False", "2006_scays_00#.csv;9;False", "2007-rike_14#.csv;89;False", "2007-scoas_08#.csv;38;False", "2008_scifo_12#.csv;12;False", "2009-nesi_11#.csv;13;False", "2009-scre_11#.csv;61;False", "2009-woly_09#.csv;83;False", "2010_cosp_04#.csv;67;False", "2010_fare_05#.csv;88;False", "2010_scoid_08#.csv;66;False", "2011-tra_08#.csv;64;False", "2011-wedd_14#.csv;37;True", "2012_cohe_12#.csv;9;False", "2013-leov_12#.csv;50;False", "2013-lug_12#.csv;44;True", "2013-too_05#.csv;68;False", "2013-tudo_11#.csv;87;True", "2013-yina_02#.csv;54;False", "2014_biou_03#.csv;87;False", "2014_jee_02#.csv;66;False", "2015-bane_11#.csv;18;True", "2015-luto_05#.csv;12;False", "2015-ribi_10#.csv;95;True", "2016_fewa_12#.csv;50;False", "2016_lue_13#.csv;80;False", "2018_juth_03#.csv;19;False", "2019-geas_01#.csv;26;True", "2020_bely_09#.csv;82;True", "2020_hact_05#.csv;19;False", "2020_nua_13#.csv;21;False", "2021-nash_01#.csv;82;False");
+			// var input = new Array("", "1985-hieu_12#.csv;83;False")
+			var txt = "";
+			function calc()
+			{
+				/*
+					Validieren Sie die erste Spalte (SourceFileName) des CSVs:
+					- Erste 4 Zeichen Jahreszahl zwischen 1990 und 2020
+					- Zeichen 5: Underline
+					- Zeichen 6-9: a-z (Kleinbuchstaben)
+					- Zeichen 10: Underline
+					- Zeichen 11-12: Zahlen zwischen 0 und 9
+					- Zeichen 13: #
+					- Zeichen 14-17: .csv
+					Beispiel:
+					1995_thra_07#.csv
+					Überprüfen Sie weiters folgende Dinge:
+					- Zeichen 1-4: Es muss sich um ein gültiges Jahr zwischen 1990 und 2020 handeln
+					- Zeichen 11-12: Es muss sich um einen gültigen Monat zwischen 1 und 12 handeln
+
+					Geben Sie folgendes als HTML Tabelle aus (Errechnen Sie die Werte und befüllen Sie die Tabelle):
+
+					Anz Teilnehmer | Max. Punktezahl | Min. Punkte | Avg. Punkte | Sieger
+
+					Altersgruppe 1 [1990-1999]
+					Altersgruppe 2 [2000 – 2009]
+					Altersgruppe 3 [ab 2010]
+					Gesamt Summe Anz. Teil.
+
+					Regelwerk:
+					- Disqualifizierte Teilnehmer dürfen nicht gewertet werden
+					- Es werden nur gültige Input Zeilen herangezogen
+					- Die Ausgabe soll im Browser als HTML Tabelle erfolgen
+					- Berechnen Sie die Werte für die Tabelle und befüllen Sie diese!
+					- Der Name der Teilnehmer befindet sich im Dateinamen (Zeichen 6-9)
+
+					- Sollte es in einer Alterskategorie 2 Teilnehmer mit identischer Punkte Zahl geben werden diese durch Bei-
+					strich getrennt angeführt und sind beide Sieger.
+				*/
+
+				const ultimativeRegex = /^(?<yearOfBirth>\d{4})_(?<firstname>\w{4})_(?<monthOfBirth>\d{2})#.csv\;(?<points>\d{2})\;(?<disqualified>\w+)/;
+				const minDate = new Date("January 01, 1990").getFullYear();
+				const maxDate = new Date("December 31, 2020").getFullYear();
+				const actualYear = new Date().getFullYear();
+
+				const ValidatesEntriesOfGivenArray = (arrayToValidate) => {
+					
+					let validEntriesInArray = [];
+					
+					arrayToValidate.forEach(element => {
+						let match = element.match(ultimativeRegex);
+						
+						if (match != null)
+						{
+							let acceptedYear 	= betweenSpecifiedTime(match.groups.yearOfBirth, minDate, maxDate);
+							let acceptedMonth 	= betweenSpecifiedTime(match.groups.monthOfBirth, 0, 12);
+							let disqualified 	= (match.groups.disqualified == "True") ? true : false;
+							if (acceptedYear && acceptedMonth && !disqualified) validEntriesInArray.push(match);
+						}
+					});
+					
+					return validEntriesInArray;
+				}
+				
+				const structureTheDataForTheTable = (dataArray) => {
+					
+					let participantsData = [];
+					
+					for (let i = 0; i < dataArray.length; i++) {
+						let person = {
+							name: dataArray[i].groups.firstname,
+							points: dataArray[i].groups.points,
+							yearOfBirth: dataArray[i].groups.yearOfBirth
+						}
+						participantsData.push(person)
+					}
+					
+					return participantsData
+				}
+
+				const betweenSpecifiedTime = (timeToProove, fromTime, toTime) => {
+					let between = false
+					if (timeToProove > fromTime && timeToProove < toTime) between = true
+					return between
+				}
+				
+				const WinnerPerAno = (array) => {
+					let year = ""
+					let winnersPerAno = {
+						neunties 	: [], // [1990-1999]
+						twenties 	: [], // [2000–2009]
+						twentyTen 	: []  // [2010]
+					}
+					for (let i = 0; i < array.length; i++) {
+						year = array[i].yearOfBirth
+						if (betweenSpecifiedTime(year, 1990, 1999)) winnersPerAno.neunties.push(array[i]);
+						if (betweenSpecifiedTime(year, 2000, 2009)) winnersPerAno.twenties.push(array[i]);
+						if (betweenSpecifiedTime(year, 2010, actualYear)) winnersPerAno.twentyTen.push(array[i]);
+					}
+
+					return winnersPerAno
+
+				}
+
+				const createHeaderForTheTable = (array) => {
+					let rowOrDataArray = [];
+					for (let i = 0; i < array.length; i++) {
+						rowOrDataArray[i] = document.createElement("th");
+						rowOrDataArray[i].innerHTML = array[i];
+					}
+					return rowOrDataArray
+				}
+				
+				const fillRowsWithDataFromArray = (dataArray) => {
+					let row = [];
+					for (let i = 0; i <= 5; i++) {
+						row[i] = document.createElement("td");
+					};
+					row[0].innerHTML = dataArray.length;
+					row[1].innerHTML = dataArray[0].points;
+					row[2].innerHTML = dataArray[1].points;
+					row[3].innerHTML = AverageOfPointsOfParticipants(dataArray);
+					row[4].innerHTML = dataArray[0].name;
+					row[5].innerHTML = dataArray[0].yearOfBirth;
+
+					return row;
+				}
+
+				const AverageOfPointsOfParticipants = (array) => {
+					let sum = 0;
+					array.forEach(element => {
+						for (let key in element) {
+							if(key == "points") sum += parseInt(element[key]);
+						}
+					});
+					return sum / array.length;
+				}
+
+				const createRowsWithData = (array, parent) => {
+					let row = document.createElement("tr");
+					let rowData = fillRowsWithDataFromArray(array);
+					parent.appendChild(row);
+					rowData.forEach(element => {
+						row.appendChild(element);
+					});
+				}
+
+				const sortTheArray = (arrayToSort) => {
+					return arrayToSort.sort((a, b) => b.points.localeCompare(a.points));
+				}
+
+				let validatedArray = ValidatesEntriesOfGivenArray(input);
+				let participants = structureTheDataForTheTable(validatedArray);
+				let winners = WinnerPerAno(participants);
+				let participantsFromTheNeunties = sortTheArray(winners.neunties)	
+				let participantsFromThetwenties = sortTheArray(winners.twenties)	
+				let participantsFromThetwentyTen = sortTheArray(winners.twentyTen)		
+				console.log(winners);
+
+				const table 		= document.createElement("table");
+				const thead 		= document.createElement("thead");
+				const tbody 		= document.createElement("tbody");
+				table.appendChild(thead);
+				table.appendChild(tbody);
+				
+				const trheader 		= document.createElement("tr");
+				let TitlesHeaderArray = ["Anz Teilnehmer","Max. Punktezahl","Min. Punkte","Avg. Punkte","Sieger", "YearOfBirth"]
+				let headerData 		= createHeaderForTheTable(TitlesHeaderArray);
+				headerData.forEach(element => {
+					thead.appendChild(element);
+				});
+				thead.appendChild(trheader);
+
+				createRowsWithData(participantsFromTheNeunties, tbody);
+				createRowsWithData(participantsFromThetwenties, tbody);
+				createRowsWithData(participantsFromThetwentyTen, tbody);
+
+				let doc = document.getElementById("result");
+				doc.appendChild(table);
+				table.setAttribute("border", "1");
+			}
+		</script>
+    </head> 
+      
+    <body onload="calc();"> 
+		<div style="width:100%; height:100%;" id="result">
+		</div>
+	
+          
+    </body> 
+</html> 
