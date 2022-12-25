@@ -58,7 +58,7 @@
 					arrayToValidate.forEach(element => {
 						let match = element.match(ultimativeRegex);
 						
-						if (match != null)
+						if (match)
 						{
 							let acceptedYear 	= betweenSpecifiedTime(match.groups.yearOfBirth, minDate, maxDate);
 							let acceptedMonth 	= betweenSpecifiedTime(match.groups.monthOfBirth, 0, 12);
